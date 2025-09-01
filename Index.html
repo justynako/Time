@@ -1,1 +1,187 @@
-{"canmore.create\_textdoc":{"name":"time\_since\_daniel","type":"code/html","content":"<!DOCTYPE html>\n\<html lang="en">\n<head>\n  \<meta charset="UTF-8" />\n  \<meta name="viewport" content="width=device-width, initial-scale=1.0" />\n  <title>Time Since Daniel Last Said I Am Wrong</title>\n  <style>\n    body {\n      margin: 0;\n      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\n      background: #003781; /\* Allianz deep blue */\n      color: #ffffff;\n      display: flex;\n      flex-direction: column;\n      align-items: center;\n      justify-content: center;\n      height: 100vh;\n      text-align: center;\n    }\n    h1 {\n      font-size: 2rem;\n      margin-bottom: 1rem;\n      color: #00a3e0; /* Allianz light blue */\n    }\n    #counter {\n      font-size: 2.5rem;\n      font-weight: bold;\n      background: #ffffff;\n      color: #003781;\n      padding: 1rem 2rem;\n      border-radius: 1rem;\n      box-shadow: 0 4px 20px rgba(0,0,0,0.2);\n      margin-bottom: 2rem;\n    }\n    button {\n      background-color: #00a3e0;\n      border: none;\n      color: #fff;\n      padding: 1rem 2rem;\n      font-size: 1rem;\n      border-radius: 0.75rem;\n      cursor: pointer;\n      box-shadow: 0 3px 10px rgba(0,0,0,0.2);\n      transition: background-color 0.3s ease;\n    }\n    button\:hover {\n      background-color: #007bbf;\n    }\n  </style>\n</head>\n<body>\n  <h1>Time since Daniel last said "I am wrong"</h1>\n  \<div id="counter">0 days 0 hours 0 minutes 0 seconds</div>\n  \<button id="resetBtn">Oh no, he did it again!</button>\n\n  <script>\n    let lastReset = new Date();\n\n    function updateCounter() {\n      const now = new Date();\n      let diff = Math.floor((now - lastReset) / 1000);\n\n      const days = Math.floor(diff / (3600*24));\n      diff -= days \* 3600 \* 24;\n      const hours = Math.floor(diff / 3600);\n      diff -= hours \* 3600;\n      const minutes = Math.floor(diff / 60);\n      const seconds = diff % 60;\n\n      document.getElementById("counter").textContent = \n        `${days} days ${hours} hours ${minutes} minutes ${seconds} seconds`;\n    }\n\n    setInterval(updateCounter, 1000);\n\n    document.getElementById("resetBtn").addEventListener("click", () => {\n      lastReset = new Date();\n      updateCounter();\n    });\n\n    // initialize\n    updateCounter();\n  </script>\n</body>\n</html>"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Time Since Daniel Last Said I Am Wrong</title>
+  <meta name="description" content="A playful timer that tracks the time since Daniel last said I am wrong. Allianz-inspired palette." />
+  <style>
+    :root{
+      --blue-900:#003781; /* Allianz deep blue */
+      --blue-700:#005AA3; /* Allianz primary */
+      --blue-500:#007BC1; /* hover */
+      --cyan-400:#00A3E0; /* accent */
+      --cyan-300:#33B6E6;
+      --ink:#0A1633;
+      --white:#ffffff;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--white);
+      background: radial-gradient(1200px 1200px at 20% 20%, var(--cyan-300) 0%, transparent 40%),
+                  linear-gradient(160deg, var(--blue-900) 0%, var(--blue-700) 60%, var(--blue-900) 100%);
+      display: grid;
+      place-items: center;
+      padding: 32px;
+    }
+
+    .card {
+      width: min(900px, 92vw);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      backdrop-filter: blur(8px);
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+      padding: clamp(20px, 6vw, 40px);
+      text-align: center;
+      animation: pop 400ms ease-out;
+    }
+
+    @keyframes pop { from { transform: translateY(8px); opacity: 0 } to { transform: none; opacity: 1 } }
+
+    h1 {
+      margin: 0 0 16px;
+      font-size: clamp(20px, 3.2vw, 32px);
+      line-height: 1.2;
+      color: var(--cyan-400);
+      letter-spacing: 0.3px;
+    }
+
+    .since {
+      font-size: clamp(48px, 10vw, 88px);
+      line-height: 1;
+      font-weight: 800;
+      color: var(--white);
+      text-shadow: 0 2px 0 rgba(0,0,0,0.12);
+      margin: 10px 0 18px;
+    }
+
+    .subline {
+      opacity: 0.9;
+      font-size: clamp(14px, 2.2vw, 16px);
+      margin-bottom: 28px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    button {
+      appearance: none;
+      border: none;
+      border-radius: 16px;
+      padding: 14px 18px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--white);
+      background: linear-gradient(180deg, var(--cyan-400), var(--blue-500));
+      box-shadow: 0 6px 20px rgba(0, 122, 193, 0.45);
+      transition: transform .06s ease, filter .2s ease, box-shadow .2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+    button:focus-visible { outline: 3px solid #9ee6ff; outline-offset: 2px; }
+    button:hover { filter: brightness(1.05); box-shadow: 0 10px 26px rgba(0, 122, 193, 0.55); }
+    button:active { transform: translateY(1px); }
+
+    .meta { opacity: .8; font-size: 13px; margin-top: 10px; }
+    .tiny { font-variant-numeric: tabular-nums; opacity: .8; }
+
+    .pill {
+      display:inline-flex; align-items:center; gap:8px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.18);
+      padding: 8px 12px; border-radius: 999px; font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <main class="card" role="main" aria-live="polite">
+    <h1>Time since Daniel last said “I am wrong”</h1>
+
+    <div id="counter" class="since" aria-label="time since event" title="Time since last reset">0d 00:00:00</div>
+    <div class="subline">
+      <span class="pill"><span aria-hidden="true">⏱️</span><span id="last-time">Just now</span></span>
+    </div>
+
+    <div class="controls">
+      <button id="resetBtn" type="button" aria-label="Reset the timer to now">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+        Oh no, he did it again!
+      </button>
+    </div>
+
+    <div class="meta tiny" id="persist-note"></div>
+  </main>
+
+  <script>
+    // --- Utilities ---
+    const pad = (n) => String(n).padStart(2, '0');
+    const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
+
+    // Persist last reset between visits
+    const STORAGE_KEY = 'daniel_last_reset_iso';
+
+    function getLastReset(){
+      const v = localStorage.getItem(STORAGE_KEY);
+      return v ? new Date(v) : new Date();
+    }
+
+    function setLastReset(d){
+      localStorage.setItem(STORAGE_KEY, d.toISOString());
+    }
+
+    let lastReset = getLastReset();
+
+    const counterEl = document.getElementById('counter');
+    const lastTimeEl = document.getElementById('last-time');
+    const persistNoteEl = document.getElementById('persist-note');
+
+    persistNoteEl.textContent = 'Timer persists locally in this browser.';
+
+    function render(){
+      const now = new Date();
+      let total = Math.max(0, Math.floor((now - lastReset) / 1000));
+
+      const days = Math.floor(total / 86400); total -= days * 86400;
+      const hours = Math.floor(total / 3600); total -= hours * 3600;
+      const minutes = Math.floor(total / 60); const seconds = total % 60;
+
+      counterEl.textContent = `${days}d ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+      counterEl.setAttribute('aria-label', `${plural(days, 'day')}, ${plural(hours,'hour')}, ${plural(minutes,'minute')}, and ${plural(seconds,'second')}`);
+
+      // Human-ish last reset line
+      const opts = { hour: '2-digit', minute: '2-digit', second:'2-digit', year:'numeric', month:'short', day:'2-digit' };
+      lastTimeEl.textContent = `Last reset: ${lastReset.toLocaleString(undefined, opts)}`;
+    }
+
+    // Update precisely on the second using rAF to reduce drift.
+    function tick(){
+      render();
+      const now = performance.now();
+      const tillNext = 1000 - (now % 1000);
+      setTimeout(() => requestAnimationFrame(tick), tillNext);
+    }
+
+    // Reset handler
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      lastReset = new Date();
+      setLastReset(lastReset);
+      render();
+    });
+
+    // Kick things off
+    render();
+    requestAnimationFrame(tick);
+  </script>
+</body>
+</html>
