@@ -3,16 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Time Since Daniel Last Said I Am Wrong</title>
-  <meta name="description" content="A playful timer that tracks the time since Daniel last said I am wrong. Allianz-inspired palette." />
+  <title>Time Since Daniel Last Said I'm Wrong</title>
   <style>
     :root{
-      --blue-900:#003781; /* Allianz deep blue */
-      --blue-700:#005AA3; /* Allianz primary */
-      --blue-500:#007BC1; /* hover */
-      --cyan-400:#00A3E0; /* accent */
+      --blue-900:#003781;
+      --blue-700:#005AA3;
+      --blue-500:#007BC1;
+      --cyan-400:#00A3E0;
       --cyan-300:#33B6E6;
-      --ink:#0A1633;
       --white:#ffffff;
     }
 
@@ -20,7 +18,7 @@
     html, body { height: 100%; }
     body {
       margin: 0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       color: var(--white);
       background: radial-gradient(1200px 1200px at 20% 20%, var(--cyan-300) 0%, transparent 40%),
                   linear-gradient(160deg, var(--blue-900) 0%, var(--blue-700) 60%, var(--blue-900) 100%);
@@ -47,7 +45,7 @@
       margin: 0 0 16px;
       font-size: clamp(20px, 3.2vw, 32px);
       line-height: 1.2;
-      color: var(--cyan-400);
+      color: var(--white);
       letter-spacing: 0.3px;
     }
 
@@ -58,12 +56,6 @@
       color: var(--white);
       text-shadow: 0 2px 0 rgba(0,0,0,0.12);
       margin: 10px 0 18px;
-    }
-
-    .subline {
-      opacity: 0.9;
-      font-size: clamp(14px, 2.2vw, 16px);
-      margin-bottom: 28px;
     }
 
     .controls {
@@ -89,64 +81,27 @@
       align-items: center;
       gap: 10px;
     }
-    button:focus-visible { outline: 3px solid #9ee6ff; outline-offset: 2px; }
     button:hover { filter: brightness(1.05); box-shadow: 0 10px 26px rgba(0, 122, 193, 0.55); }
     button:active { transform: translateY(1px); }
-
-    .meta { opacity: .8; font-size: 13px; margin-top: 10px; }
-    .tiny { font-variant-numeric: tabular-nums; opacity: .8; }
-
-    .pill {
-      display:inline-flex; align-items:center; gap:8px;
-      background: rgba(255,255,255,.12);
-      border: 1px solid rgba(255,255,255,.18);
-      padding: 8px 12px; border-radius: 999px; font-size: 13px;
-    }
   </style>
 </head>
 <body>
   <main class="card" role="main" aria-live="polite">
-    <h1>Time since Daniel last said “I am wrong”</h1>
-
-    <div id="counter" class="since" aria-label="time since event" title="Time since last reset">0d 00:00:00</div>
-    <div class="subline">
-      <span class="pill"><span aria-hidden="true">⏱️</span><span id="last-time">Just now</span></span>
-    </div>
-
+    <h1>Time since Daniel last said I'm wrong...</h1>
+    <div id="counter" class="since">0d 00:00:00</div>
     <div class="controls">
-      <button id="resetBtn" type="button" aria-label="Reset the timer to now">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
-        Oh no, he did it again!
-      </button>
+      <button id="resetBtn" type="button">Oh no, he did it again!</button>
     </div>
-
-    <div class="meta tiny" id="persist-note"></div>
   </main>
 
   <script>
-    // --- Utilities ---
     const pad = (n) => String(n).padStart(2, '0');
-    const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
 
-    // Persist last reset between visits
-    const STORAGE_KEY = 'daniel_last_reset_iso';
-
-    function getLastReset(){
-      const v = localStorage.getItem(STORAGE_KEY);
-      return v ? new Date(v) : new Date();
-    }
-
-    function setLastReset(d){
-      localStorage.setItem(STORAGE_KEY, d.toISOString());
-    }
-
-    let lastReset = getLastReset();
+    // Fixed start time: 29 August at 10:20 CET (Central European Time)
+    // CET is UTC+1, but late August uses CEST (UTC+2). We'll use +02:00 offset.
+    let lastReset = new Date("2025-08-29T08:20:00+02:00");
 
     const counterEl = document.getElementById('counter');
-    const lastTimeEl = document.getElementById('last-time');
-    const persistNoteEl = document.getElementById('persist-note');
-
-    persistNoteEl.textContent = 'Timer persists locally in this browser.';
 
     function render(){
       const now = new Date();
@@ -157,14 +112,8 @@
       const minutes = Math.floor(total / 60); const seconds = total % 60;
 
       counterEl.textContent = `${days}d ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
-      counterEl.setAttribute('aria-label', `${plural(days, 'day')}, ${plural(hours,'hour')}, ${plural(minutes,'minute')}, and ${plural(seconds,'second')}`);
-
-      // Human-ish last reset line
-      const opts = { hour: '2-digit', minute: '2-digit', second:'2-digit', year:'numeric', month:'short', day:'2-digit' };
-      lastTimeEl.textContent = `Last reset: ${lastReset.toLocaleString(undefined, opts)}`;
     }
 
-    // Update precisely on the second using rAF to reduce drift.
     function tick(){
       render();
       const now = performance.now();
@@ -172,14 +121,11 @@
       setTimeout(() => requestAnimationFrame(tick), tillNext);
     }
 
-    // Reset handler
     document.getElementById('resetBtn').addEventListener('click', () => {
       lastReset = new Date();
-      setLastReset(lastReset);
       render();
     });
 
-    // Kick things off
     render();
     requestAnimationFrame(tick);
   </script>
